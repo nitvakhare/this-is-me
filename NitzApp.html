@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Will You Go On A Date With Me? 💕</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%; height: 100%;
+  font-family: 'Segoe UI', sans-serif;
+  background: #0f0520;
+  overflow: hidden;
+  position: relative;
+}
+
+.orb {
+  position: fixed; border-radius: 50%;
+  filter: blur(90px); opacity: 0.4;
+  pointer-events: none; z-index: 0;
+  animation: drift 10s ease-in-out infinite;
+}
+.orb1 { width: 55vw; height: 55vw; background: #8b2fc9; top: -15vw; left: -10vw; animation-delay: 0s; }
+.orb2 { width: 45vw; height: 45vw; background: #e0407b; bottom: -10vw; right: -10vw; animation-delay: -4s; }
+.orb3 { width: 35vw; height: 35vw; background: #2b7fff; bottom: 20%; left: 15%; animation-delay: -7s; }
+
+@keyframes drift {
+  0%,100% { transform: translate(0,0) scale(1); }
+  33%      { transform: translate(3vw,-2vw) scale(1.05); }
+  66%      { transform: translate(-2vw,2vw) scale(0.96); }
+}
+
+/* ── CARD ── */
+.card {
+  position: relative; z-index: 10;
+  width: min(560px, 92vw);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.13);
+  border-radius: 28px;
+  padding: clamp(24px, 5vw, 48px) clamp(20px, 5vw, 44px);
+  backdrop-filter: blur(24px);
+  box-shadow: 0 40px 100px rgba(0,0,0,0.6);
+  text-align: center;
+}
+
+/* center card in full viewport */
+#wrap {
+  position: fixed; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1;
+}
+
+@keyframes cardIn {
+  from { opacity:0; transform: translateY(40px) scale(0.94); }
+  to   { opacity:1; transform: translateY(0)    scale(1); }
+}
+.card-anim { animation: cardIn 0.45s cubic-bezier(0.34,1.56,0.64,1) both; }
+
+/* ── GIF FRAME ── */
+.gif-wrap {
+  width: 100%; height: clamp(160px, 30vh, 260px);
+  border-radius: 18px; overflow: hidden;
+  background: rgba(0,0,0,0.35);
+  margin-bottom: 22px;
+  position: relative;
+}
+.gif-wrap img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: opacity 0.3s;
+  display: block;
+}
+/* fallback text if gif 404s */
+.gif-wrap::after {
+  content: attr(data-fallback);
+  position: absolute; inset:0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: clamp(3rem,8vw,5rem);
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.title {
+  font-size: clamp(1.3rem, 4vw, 2rem);
+  font-weight: 800; color: #fff;
+  margin-bottom: 10px; line-height: 1.2;
+}
+
+.subtitle {
+  font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+  color: rgba(255,255,255,0.68);
+  line-height: 1.55; margin-bottom: 26px;
+  min-height: 44px;
+}
+
+/* ── BUTTONS ── */
+.btn-row {
+  display: flex; gap: 12px;
+  justify-content: center; flex-wrap: wrap;
+  min-height: 52px; position: relative;
+}
+
+button {
+  padding: 13px 28px;
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
+  font-weight: 700; border: none;
+  border-radius: 14px; cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+  white-space: nowrap;
+}
+
+.btn-yes {
+  background: linear-gradient(135deg, #a855f7, #ec4899);
+  color: #fff; padding: 14px 38px;
+  font-size: clamp(1rem, 2.8vw, 1.15rem);
+  box-shadow: 0 4px 24px rgba(168,85,247,0.45);
+}
+.btn-yes:hover { transform: scale(1.06); box-shadow: 0 8px 32px rgba(168,85,247,0.65); }
+.btn-yes:active { transform: scale(0.97); }
+
+.btn-choice {
+  background: rgba(255,255,255,0.1);
+  color: #fff; border: 1px solid rgba(255,255,255,0.18);
+  flex: 1; min-width: 120px;
+}
+.btn-choice:hover { background: rgba(255,255,255,0.2); transform: scale(1.04); }
+
+.btn-no {
+  background: rgba(255,80,80,0.15);
+  color: #ffaaaa;
+  border: 1px solid rgba(255,80,80,0.28);
+}
+.btn-no:hover { background: rgba(255,80,80,0.28); }
+
+.btn-restart {
+  margin-top: 18px;
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.5);
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 9px 22px; font-size: 0.82rem;
+  display: block; width: 100%;
+}
+.btn-restart:hover { background: rgba(255,255,255,0.15); color: #fff; }
+
+.counter {
+  font-size: 0.8rem; color: rgba(255,255,255,0.35);
+  margin-top: 14px; min-height: 18px;
+}
+
+/* ── FLYING NO ── */
+#flyno {
+  position: fixed !important;
+  z-index: 9999;
+  transition: left 0.18s ease-out, top 0.18s ease-out;
+  pointer-events: auto;
+}
+
+/* ── CONFETTI ── */
+.confetti {
+  position: fixed; pointer-events: none;
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  animation: fall linear forwards;
+  z-index: 9999;
+}
+@keyframes fall {
+  from { opacity:1; transform: translateY(0) rotate(0deg); }
+  to   { opacity:0; transform: translateY(105vh) rotate(720deg); }
+}
+
+/* ── MISC ANIMS ── */
+@keyframes shake {
+  0%,100% { transform:translateX(0); }
+  20%      { transform:translateX(-9px); }
+  40%      { transform:translateX(9px); }
+  60%      { transform:translateX(-5px); }
+  80%      { transform:translateX(5px); }
+}
+.shake { animation: shake 0.4s ease; }
+
+@keyframes popIn {
+  0%   { transform:scale(0.4); opacity:0; }
+  70%  { transform:scale(1.12); }
+  100% { transform:scale(1);    opacity:1; }
+}
+.pop { animation: popIn 0.45s cubic-bezier(0.34,1.56,0.64,1) both; }
+</style>
+</head>
+<body>
+
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+
+<div id="wrap">
+  <div class="card card-anim" id="card">
+    <div class="gif-wrap" id="gifWrap" data-fallback="🎬">
+      <img id="gif" src="" alt="">
+    </div>
+    <div class="title"    id="title">Hey there 👋</div>
+    <div class="subtitle" id="sub">Loading charm...</div>
+    <div class="btn-row"  id="btns"></div>
+    <div class="counter"  id="ctr"></div>
+    <button class="btn-restart" id="restartBtn" onclick="restart()" style="display:none">↺ Start over</button>
+  </div>
+</div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────
+let stage = 'pick', rejections = 0, drink = '', flynoBorn = false;
+const MOVE_AFTER = 4;
+
+// ── GIFs (media1.giphy.com direct — most reliable hotlink format) ──────────
+// Each is a real funny GIF picked by ID
+const GIFS = {
+  // cat sniffing coffee / excited
+  start:   'https://media1.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif',
+  // Ryan Reynolds winking suavely
+  flirt:   'https://media1.giphy.com/media/l0MYEqEzwMWFCg8rm/giphy.gif',
+  // Puss in Boots big sad eyes
+  blush:   'https://media1.giphy.com/media/OPU6wzx8JrHna/giphy.gif',
+  // Michael Scott "No God Please No"
+  nope:    'https://media1.giphy.com/media/12XMGIWtrHBl5e/giphy.gif',
+  // cat knocking things off desk
+  chaos:   'https://media1.giphy.com/media/VbnUQpnihPSIgIXuZv/giphy.gif',
+  // Shrek Donkey "In the morning!" celebrate
+  win:     'https://media1.giphy.com/media/5xaOcLGvzHxDKjufnLW/giphy.gif',
+};
+
+// ── Fallback emoji if gif fails ────────────────────────────────────────────
+const FALLBACKS = { start:'☕', flirt:'😏', blush:'🥺', nope:'😱', chaos:'🔥', win:'🎉' };
+
+// ── Copy ───────────────────────────────────────────────────────────────────
+const noMsgs = [
+  "Okay... that hurt. But I'm resilient. 🥲",
+  "My horoscope said today was my day. Reconsider? 🔮",
+  "Bold choice. Sure you meant that? 🤨",
+  "My dog said you'd say yes. He's never wrong. 🐶",
+  "Oh NOW things get spicy...",
+];
+const pushyMsgs = [
+  "You physically cannot catch that button 😤",
+  "Scientists call this 'unavoidable charm' 🧪",
+  "I trained for this moment 🏋️",
+  "The button has gone feral. I have not. 😌",
+  "My therapist said this is healthy. She lied. 💆",
+  "Day 47: they still haven't said yes. I remain hopeful.",
+  "404: Dignity not found. Still here though 🙂",
+];
+const yesBtns = ["Yes!!! 🎉","Absolutely 🔥","Heck yes 💕","OMG YES 😱","Let's goooo 🚀","YESSS 😍","Obviously 💯","DO IT 👆"];
+
+// ── Helpers ────────────────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+const rand = arr => arr[Math.floor(Math.random() * arr.length)];
+
+function setGif(key) {
+  const img = $('gif');
+  img.style.opacity = 0;
+  setTimeout(() => {
+    img.src = GIFS[key];
+    $('gifWrap').setAttribute('data-fallback', FALLBACKS[key]);
+    img.style.opacity = 1;
+  }, 220);
+}
+
+function shakeCard() {
+  const c = $('card');
+  c.classList.remove('shake');
+  void c.offsetWidth;
+  c.classList.add('shake');
+}
+
+function burst(emojis, n = 40) {
+  for (let i = 0; i < n; i++) {
+    setTimeout(() => {
+      const d = document.createElement('div');
+      d.className = 'confetti';
+      d.textContent = rand(emojis);
+      d.style.left = Math.random() * 100 + 'vw';
+      d.style.top  = '-3rem';
+      d.style.animationDuration = (1.8 + Math.random() * 2) + 's';
+      document.body.appendChild(d);
+      setTimeout(() => d.remove(), 4000);
+    }, i * 55);
+  }
+}
+
+function killFlyno() {
+  const old = $('flyno');
+  if (old) old.remove();
+  flynoBorn = false;
+}
+
+// ── Render ─────────────────────────────────────────────────────────────────
+function render() {
+  const btns = $('btns');
+  btns.innerHTML = '';
+  $('ctr').textContent = '';
+  $('restartBtn').style.display = 'none';
+
+  if (stage === 'pick') {
+    killFlyno();
+    setGif('start');
+    $('title').textContent = 'Hey there 👋';
+    $('sub').textContent   = 'Quick important question — are you a tea or coffee person?';
+
+    ['Tea 🍵','Coffee ☕'].forEach(label => {
+      const b = document.createElement('button');
+      b.className = 'btn-choice';
+      b.textContent = label;
+      b.onclick = () => {
+        drink = label.split(' ')[0];
+        stage = 'ask'; rejections = 0;
+        render();
+      };
+      btns.appendChild(b);
+    });
+  }
+
+  else if (stage === 'ask') {
+    if (rejections === 0) {
+      setGif('flirt');
+      $('title').textContent = `Ooh, a ${drink} person 👀`;
+      $('sub').textContent   = `Wanna grab ${drink} together sometime? ☕💫`;
+    }
+
+    // YES button always present
+    const yes = document.createElement('button');
+    yes.className   = 'btn-yes pop';
+    yes.textContent = rand(yesBtns);
+    yes.onclick     = () => { stage = 'win'; render(); sendEmail(); };
+    btns.appendChild(yes);
+
+    // NO button — normal phase
+    if (rejections < MOVE_AFTER) {
+      const no = document.createElement('button');
+      no.className   = 'btn-no';
+      no.textContent = 'No 😅';
+      no.onclick     = handleNo;
+      btns.appendChild(no);
+
+    } else {
+      // FLYING NO — only create once, then just reposition
+      if (!flynoBorn) spawnFlyno();
+      const no = $('flyno');
+      if (no) no.textContent = rand(['Run. 🏃','Catch me 😈','Nope 💨','Good luck 🚀']);
+    }
+
+    $('restartBtn').style.display = 'block';
+  }
+
+  else if (stage === 'win') {
+    killFlyno();
+    setGif('win');
+    $('title').textContent = 'YESSSSS!! 🎉🎉🎉';
+    $('sub').innerHTML     = '<span style="color:#f9a8d4;font-size:1.15em;font-weight:800;">This is gonna be SO legendary 💕</span>';
+    $('ctr').innerHTML     = '📲 Sliding into Instagram in a sec... ✨';
+    burst(['💕','✨','🎉','💖','🌹','💝','🎊','💐','🎈','🥂'], 55);
+    $('restartBtn').style.display = 'block';
+  }
+}
+
+// ── handleNo ───────────────────────────────────────────────────────────────
+function handleNo() {
+  rejections++;
+  shakeCard();
+
+  if (rejections < MOVE_AFTER) {
+    setGif('blush');
+    $('sub').textContent = noMsgs[Math.min(rejections - 1, noMsgs.length - 1)];
+    $('ctr').textContent = `No ×${rejections} — button evolves at ×${MOVE_AFTER} 👀`;
+  } else if (rejections === MOVE_AFTER) {
+    setGif('chaos');
+    $('sub').textContent = "The No button has been UNLEASHED 😈";
+    $('ctr').textContent = "Good luck clicking it now lmaooo";
+  } else {
+    setGif('nope');
+    $('sub').textContent = pushyMsgs[Math.min(rejections - MOVE_AFTER - 1, pushyMsgs.length - 1)];
+    $('ctr').textContent = `Escape attempts: ${rejections - MOVE_AFTER} 🏃`;
+  }
+
+  render();
+}
+
+// ── Flying No button ───────────────────────────────────────────────────────
+function spawnFlyno() {
+  const btn = document.createElement('button');
+  btn.id          = 'flyno';
+  btn.className   = 'btn-no';
+  btn.textContent = 'No... 🏃';
+  btn.style.cssText = `
+    position: fixed; z-index: 9999;
+    left: 50%; top: 80%;
+    transform: translate(-50%, -50%);
+    transition: left 0.16s ease-out, top 0.16s ease-out;
+  `;
+
+  const dodge = () => moveRandom(btn);
+  btn.addEventListener('mouseenter', dodge);
+  btn.addEventListener('touchstart',  dodge, { passive: true });
+  // If somehow clicked (mobile tap lands right on it)
+  btn.addEventListener('click', dodge);
+
+  document.body.appendChild(btn);
+  flynoBorn = true;
+  // initial random position
+  setTimeout(() => moveRandom(btn), 50);
+}
+
+function moveRandom(btn) {
+  const bw = btn.offsetWidth  || 120;
+  const bh = btn.offsetHeight || 46;
+  const pad = 20;
+  const maxX = window.innerWidth  - bw - pad;
+  const maxY = window.innerHeight - bh - pad;
+  const x = pad + Math.random() * maxX;
+  const y = pad + Math.random() * maxY;
+  btn.style.left = x + 'px';
+  btn.style.top  = y + 'px';
+  btn.style.transform = 'none';
+}
+
+// Keep flying button within bounds on resize
+window.addEventListener('resize', () => {
+  const btn = $('flyno');
+  if (btn) moveRandom(btn);
+});
+
+// ── Restart ────────────────────────────────────────────────────────────────
+function restart() {
+  stage = 'pick'; rejections = 0; drink = '';
+  killFlyno();
+  const card = $('card');
+  card.classList.remove('card-anim');
+  void card.offsetWidth;
+  card.classList.add('card-anim');
+  render();
+}
+
+// ── Redirect to Instagram DM ───────────────────────────────────────────────
+function sendEmail() {
+  window.open('https://ig.me/m/nitvahare', '_blank');
+}
+
+// ── Boot ───────────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
