@@ -363,16 +363,11 @@ function handleNo() {
     $('title').textContent = '🥺';
     $('sub').textContent = noMsgs[Math.min(rejections - 1, noMsgs.length - 1)];
     $('ctr').textContent = `No ×${rejections} — button evolves at ×${MOVE_AFTER} 👀`;
-  } else if (rejections === MOVE_AFTER) {
-    setGif('chaos');
-    $('title').textContent = '🔥';
-    $('sub').textContent = "The No button has been UNLEASHED 😈";
-    $('ctr').textContent = "Good luck clicking it now lmaooo";
   } else {
     setGif('nope');
     $('title').textContent = '😈';
-    $('sub').textContent = pushyMsgs[Math.min(rejections - MOVE_AFTER - 1, pushyMsgs.length - 1)];
-    $('ctr').textContent = `Escape attempts: ${rejections - MOVE_AFTER} 🏃`;
+    $('sub').textContent = pushyMsgs[Math.min(rejections - MOVE_AFTER, pushyMsgs.length - 1)];
+    $('ctr').textContent = `Escape attempts: ${rejections - MOVE_AFTER + 1} 🏃`;
   }
 
   render();
