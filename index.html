@@ -212,8 +212,8 @@ const MOVE_AFTER = 4;
 // ── GIFs (media1.giphy.com direct — most reliable hotlink format) ──────────
 // Each is a real funny GIF picked by ID
 const GIFS = {
-  start:   'https://media1.giphy.com/media/lx7AtejahSmgIWmLX5/giphy.gif',
-  flirt:   'https://media1.giphy.com/media/fRtK3t3i67tRK4dfez/giphy.gif',
+  start:   'https://media1.giphy.com/media/DfSXiR60W9MVq/giphy.gif',
+  flirt:   'https://media1.giphy.com/media/6Ggx27ZZjVUKtcUPMK/giphy.gif',
   blush:   'https://media1.giphy.com/media/fhLgA6nJec3Cw/giphy.gif',
   nope:    'https://media1.giphy.com/media/gnE4FFhtFoLKM/giphy.gif',
   chaos:   'https://media1.giphy.com/media/ZD8ZjehSsLDZQRKJjJ/giphy.gif',
@@ -360,14 +360,17 @@ function handleNo() {
 
   if (rejections < MOVE_AFTER) {
     setGif('blush');
+    $('title').textContent = '🥺';
     $('sub').textContent = noMsgs[Math.min(rejections - 1, noMsgs.length - 1)];
     $('ctr').textContent = `No ×${rejections} — button evolves at ×${MOVE_AFTER} 👀`;
   } else if (rejections === MOVE_AFTER) {
     setGif('chaos');
+    $('title').textContent = '🔥';
     $('sub').textContent = "The No button has been UNLEASHED 😈";
     $('ctr').textContent = "Good luck clicking it now lmaooo";
   } else {
     setGif('nope');
+    $('title').textContent = '😈';
     $('sub').textContent = pushyMsgs[Math.min(rejections - MOVE_AFTER - 1, pushyMsgs.length - 1)];
     $('ctr').textContent = `Escape attempts: ${rejections - MOVE_AFTER} 🏃`;
   }
